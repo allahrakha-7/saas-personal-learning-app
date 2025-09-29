@@ -10,25 +10,25 @@ const Page = () => {
         <section className="flex gap-4 justify-between items-start w-full max-lg:flex-col-reverse max-lg:items-center">
           <CompanionCard
             id="123"
-            name="learn the science subject"
-            topic="mitocandria"
-            subject="science"
+            name="Learn the Science Subject"
+            topic="Biotechnology"
+            subject="Science"
             duration={45}
             color="#ffda6e"
           />
           <CompanionCard
             id="456"
-            name="learn the math subject"
-            topic="theorems"
-            subject="math"
+            name="Learn the Math Subject"
+            topic="Applied Mathematics"
+            subject="Math"
             duration={30}
             color="#e5d"
           />
           <CompanionCard
             id="789"
-            name="learn the urdu subject"
-            topic="kahani angor khatay hein"
-            subject="urdu"
+            name="Learn the English Subject"
+            topic="Professional Communication"
+            subject="English"
             duration={55}
             color="#bde"
           />
