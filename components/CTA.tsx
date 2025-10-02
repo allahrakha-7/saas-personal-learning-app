@@ -17,7 +17,7 @@ const CTA = () => {
           voice conversations that feel natural and fan
         </p>
         <Image src="images/cta.svg" alt="cta" width={362} height={232} />
-        <button className="bg-[oklch(0.205 0 0)] text-white rounded-xl cursor-pointer px-4 py-2 flex items-center gap-2">
+        <button className="bg-black text-white rounded-xl cursor-pointer px-4 py-2 flex items-center gap-2">
           <Image src="/icons/plus.svg" alt="plus" width={12} height={12} />
           <Link href="/companions/new">
             <p>Build a New Companion</p>

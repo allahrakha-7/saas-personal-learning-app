@@ -20,7 +20,7 @@ const Navitems = () => {
           key={label}
           href={href}
           className={cn(
-            "text-gray-600 hover:text-primary transition-colors",
+            "text-gray-600 hover:text-primary transition-colors ",
             pathname === href && "text-primary font-medium"
           )}
         >
