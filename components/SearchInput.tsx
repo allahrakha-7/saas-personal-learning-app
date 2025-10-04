@@ -4,17 +4,20 @@ import { usePathname, useRouter, useSearchParams } from "next/navigation"
 import { useEffect, useState } from "react";
 import Image from "next/image";
 import { formUrlQuery, removeKeysFromUrlQuery } from "@jsmastery/utils";
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 import path from "path";
 
 const SearchInput = () => {
   const pathname = usePathname();
   const router = useRouter();
   const searchParams = useSearchParams();
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const query = searchParams.get('topic') || '';
 
   const [searchQuery, setSearchQuery] = useState('');
 
   useEffect(() => {
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const delayDebounceFn = setTimeout(() => {
       if(searchQuery) {
         const newUrl = formUrlQuery({
