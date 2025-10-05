@@ -12,7 +12,7 @@ const Navbar = () => {
 
   return (
     <>
-      <nav className="w-full bg-white shadow-md sticky top-0 z-50">
+      <nav className="w-full bg-white shadow-sm sticky top-0 z-50">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between items-center h-16">
             <Link href="/" className="flex items-center gap-2 cursor-pointer">
@@ -46,7 +46,7 @@ const Navbar = () => {
         </div>
 
         {isOpen && (
-          <div className="md:hidden bg-white border-t shadow-md">
+          <div className="md:hidden bg-white border-t ">
             <div className="flex flex-col items-start gap-4 p-4">
               <Navitems />
 
