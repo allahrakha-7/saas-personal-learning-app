@@ -40,9 +40,9 @@ const CompanionSession = async ({ params }: CompanionSessionPageProps) => {
             <p className="text-lg">{topic}</p>
           </div>
         </div>
-        <div className="items-start text-2xl max-md:hidden">
-          {duration} minutes
-        </div>
+        <span className="items-start inline text-[22px] max-md:hidden">
+          {duration} Mins
+        </span>
       </article>
       <CompanionComponent 
       {...companion}
