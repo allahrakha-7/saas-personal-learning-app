@@ -23,7 +23,7 @@ const CompanionsLibrary = async ({ searchParams }: SearchParams) => {
         </div>
       </section>
 
-      <section className="flex flex-wrap gap-4 w-full max-md:justify-center">
+      <section className="flex max-sm:flex-wrap gap-4 w-full max-md:justify-center">
         {companions.map((companion) => (
           <CompanionCard key={companion.id} {...companion} 
           color={getSubjectColor(companion.subject)}

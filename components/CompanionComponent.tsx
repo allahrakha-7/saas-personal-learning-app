@@ -6,16 +6,16 @@ import Image from "next/image";
 import { useEffect, useRef, useState } from "react";
 import Lottie, { LottieRefCurrentProps } from "lottie-react";
 import soundwaves from "@/constants/soundwaves.json";
+import { addToSessionHistory } from "@/lib/actions/companion.actions";
 
 enum CallStatus {
   INACTIVE = "INACTIVE",
   CONNECTING = "CONNECTING",
   ACTIVE = "ACTIVE",
-  ENDED = "ENDED",
+  FINISHED = "FINISHED",
 }
 
 const CompanionComponent = ({
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   companionId,
   subject,
   topic,
@@ -26,7 +26,7 @@ const CompanionComponent = ({
   voice,
 }: CompanionComponentProps) => {
   const [callStatus, setCallStatus] = useState<CallStatus>(CallStatus.INACTIVE);
-  const [isSpeaking, setIsSpeaking] = useState<boolean>(false);
+  const [isSpeaking, setIsSpeaking] = useState(false);
   const [isMuted, setIsMuted] = useState(false);
   const [messages, setMessages] = useState<SavedMessage[]>([]);
 
@@ -43,27 +43,26 @@ const CompanionComponent = ({
   }, [isSpeaking, lottieRef]);
 
   useEffect(() => {
-    const onCallStart = () => {
-      setCallStatus(CallStatus.ACTIVE);
-    };
+    const onCallStart = () => setCallStatus(CallStatus.ACTIVE);
+
     const onCallEnd = () => {
-      setCallStatus(CallStatus.ENDED);
+      setCallStatus(CallStatus.FINISHED);
+      addToSessionHistory(companionId);
     };
+
     const onMessage = (message: Message) => {
       if (message.type === "transcript" && message.transcriptType === "final") {
         const newMessage = { role: message.role, content: message.transcript };
         setMessages((prev) => [newMessage, ...prev]);
       }
     };
-    const onSpeechStart = () => {
-      setIsSpeaking(true);
-    };
-    const onSpeechEnd = () => {
-      setIsSpeaking(false);
-    };
-    const onError = (error: Error) => {
-      console.log("Call error:", error?.message || error || "Unknown error");
-    };
+
+    const onSpeechStart = () => setIsSpeaking(true);
+
+    const onSpeechEnd = () => setIsSpeaking(false);
+
+    const onError = (error: Error) => console.log("Error", error);
+
     vapi.on("call-start", onCallStart);
     vapi.on("call-end", onCallEnd);
     vapi.on("message", onMessage);
@@ -79,7 +78,7 @@ const CompanionComponent = ({
       vapi.off("speech-start", onSpeechStart);
       vapi.off("speech-end", onSpeechEnd);
     };
-  }, []);
+  }, [companionId]);
 
   const toggleMicrophone = () => {
     const isMuted = vapi.isMuted();
@@ -89,32 +88,21 @@ const CompanionComponent = ({
 
   const handleCall = async () => {
     setCallStatus(CallStatus.CONNECTING);
+
     const assistantOverrides = {
       variableValues: { subject, topic, style },
       clientMessages: ["transcript"],
       serverMessages: [],
     };
 
-    try {
-      await new Promise((res) => setTimeout(res, 300)); // wait for WASM init
-      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-      // @ts-expect-error
-      vapi.start(configureAssistant(voice, style), assistantOverrides);
-    } catch (err) {
-      console.error("Error starting call:", err);
-      setCallStatus(CallStatus.INACTIVE);
-    }
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+    // @ts-expect-error
+    vapi.start(configureAssistant(voice, style), assistantOverrides);
   };
 
-  const handleDisconnect = async () => {
-    if (callStatus === CallStatus.ENDED || callStatus === CallStatus.INACTIVE)
-      return;
-    setCallStatus(CallStatus.ENDED);
-    try {
-      vapi.stop();
-    } catch (err) {
-      console.warn("Tried to stop an already-ended session:", err);
-    }
+  const handleDisconnect = () => {
+    setCallStatus(CallStatus.FINISHED);
+    vapi.stop();
   };
 
   return (
@@ -128,7 +116,7 @@ const CompanionComponent = ({
             <div
               className={cn(
                 "absolute transition-opacity duration-1000",
-                callStatus === CallStatus.ENDED ||
+                callStatus === CallStatus.FINISHED ||
                   callStatus === CallStatus.INACTIVE
                   ? "opacity-100"
                   : "opacity-0",
@@ -205,20 +193,11 @@ const CompanionComponent = ({
           </button>
         </div>
       </section>
-      <style jsx>{`
-        .no-scrollbar::-webkit-scrollbar {
-          display: none;
-        }
-        .no-scrollbar {
-          -ms-overflow-style: none;
-          scrollbar-width: none;
-        }
-      `}</style>
-      <section className="relative flex flex-col gap-4 w-full items-center pt-10 flex-grow overflow-hidden">
-        <div className="overflow-y-auto w-full flex flex-col gap-4 max-sm:gap-2 pr-2 h-full text-2xl no-scrollbar">
+      <section className="relative flex flex-col gap-4 w-full items-center pt-10 flex-grow">
+        <div className="w-full flex flex-col gap-4 max-sm:gap-2 pr-2 text-lg">
           {messages.map((message, index) =>
             message.role === "assistant" ? (
-              <p key={index} className="max-sm:text-sm">
+              <p key={index} className="max-sm:text-sm text-gray-700">
                 {name.split(" ")[0].replace(/[.,]/g, "")}: {message.content}
               </p>
             ) : (

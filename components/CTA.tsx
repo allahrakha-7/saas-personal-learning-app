@@ -4,7 +4,7 @@ import Link from "next/link";
 const CTA = () => {
   return (
     <>
-      <section className="bg-[#2c2c2c] text-white rounded-4xl px-7 py-10 flex flex-col items-center text-center gap-5 w-1/3 max-lg:w-1/2 max-md:w-full">
+      <section className="bg-[#2c2c2c] max-sm:w-full text-white rounded-4xl px-7 py-10 flex flex-col items-center text-center gap-5 w-1/3 max-lg:w-1/2 max-md:w-full">
         <div className="bg-[#fccc41] rounded-4xl px-3 py-1.5 text-black">
           Start learning your way
         </div>
@@ -20,7 +20,7 @@ const CTA = () => {
         <button className="bg-black text-white rounded-xl cursor-pointer px-4 py-2 flex items-center gap-2">
           <Image src="/icons/plus.svg" alt="plus" width={12} height={12} />
           <Link href="/companions/new">
-            <p>Build a New Companion</p>
+            <p>Build A New Companion</p>
           </Link>
         </button>
       </section>
