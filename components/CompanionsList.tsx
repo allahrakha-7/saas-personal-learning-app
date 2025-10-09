@@ -18,7 +18,6 @@ interface CompanionListProps {
 }
 
 const CompanionsList = ({
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   title,
   companions,
   classNames,
@@ -31,7 +30,7 @@ const CompanionsList = ({
           classNames
         )}
       >
-        <h1 className="font-bold text-3xl">Recent Companions</h1>
+        <h2 className="font-bold text-3xl">{title}</h2>
 
         <Table>
           <TableHeader>

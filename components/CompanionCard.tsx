@@ -1,6 +1,10 @@
+"use client";
+
 import Image from "next/image";
 import Link from "next/link";
-
+import { addBookmark, removeBookmark } from "@/lib/actions/companion.actions";
+import { usePathname } from "next/navigation";
+import { useState } from "react";
 interface CompanionCardProps {
   id: string;
   name: string;
@@ -8,6 +12,7 @@ interface CompanionCardProps {
   subject: string;
   duration: number;
   color: string;
+  bookmarked: boolean;
 }
 
 const CompanionCard = ({
@@ -17,14 +22,30 @@ const CompanionCard = ({
   subject,
   duration,
   color,
+  bookmarked,
 }: CompanionCardProps) => {
+
+  const [isBookmarked, setIsBookmarked] = useState(bookmarked);
+
+  const pathname = usePathname();
+  
+  const handleBookmark = async () => {
+  if (isBookmarked) {
+    await removeBookmark(id, pathname);
+    setIsBookmarked(false);
+  } else {
+    await addBookmark(id, pathname);
+    setIsBookmarked(true);
+  }
+
+}
   return (
     <>
     <article className="flex flex-col rounded-4xl border border-black px-4 py-4 gap-5 w-full min-lg:max-w-[410px] justify-between" style={{ backgroundColor: color }}>
       <div className="flex justify-between items-center">
         <div className="bg-black text-white rounded-4xl text-sm px-2 py-1 capitalize">{subject}</div>
-        <button className="px-2 bg-black rounded-4xl flex items-center h-full aspect-square cursor-pointer" aria-label="Bookmark companion">
-          <Image src="/icons/bookmark.svg" alt="" width={12.5} height={15} />
+        <button className="px-2 bg-black rounded-4xl flex items-center h-full aspect-square cursor-pointer" onClick={handleBookmark} aria-label="Bookmark companion">
+          <Image src={isBookmarked ? "/icons/bookmark-filled.svg" : "/icons/bookmark.svg"} alt="bookmark" width={12.5} height={15} />
         </button>
       </div>
 
